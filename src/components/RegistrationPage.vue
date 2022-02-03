@@ -12,15 +12,15 @@
     </div>
     <form class="register-form" @submit.prevent="sendDataRegist">
       <label>Имя</label><br />
-      <input type="text" v-model="name"/>
+      <input type="text" name="name"/>
       <label>Номер телефона</label><br />
-      <input type="tel" v-model="phone"/>
+      <input type="tel" name="phone"/>
       <label>E-mail</label><br />
-      <input type="email" v-model="email"/>
+      <input type="email" name="email"/>
       <label>Как узнали про нас</label><br />
-      <input type="text" v-model="referral"/>
+      <input type="text" name="referral"/>
       <label>Пароль</label><br />
-      <input type="password" v-model="password"/>
+      <input type="password" name="password"/>
       <button class="blue-button">Зарегистрироваться</button>
     </form>
   </div>
@@ -31,27 +31,18 @@ import axios from "axios";
 export default {
   data(){
     return{
-      selectedServiceType: null,
-      name: '',
-      phone: '',
-      email: '',
-      referral: '',
-      password: ''
+      selectedServiceType: null
     }
   },
   methods: {
-  async  sendDataRegist(){
+ async sendDataRegist(e){
+    const inputs = new FormData(e.target);
+   const data =  Object.fromEntries(inputs.entries());
+   const sendData = {type: this.selectedServiceType, ...data};
      await axios({
   method: 'post',
   url: 'https://api.worldofjob.ru:3000/auth/register',
-  data: {
-     type: this.selectedServiceType,
-     name: this.name,
-     phone: this.phone,
-     email: this.email,
-     referral: this.referral,
-     password: this.password
-  }
+  data: sendData
 });
     }
   }
